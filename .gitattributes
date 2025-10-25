@@ -1,0 +1,5 @@
+# .gitattributes
+* text=auto eol=lf
+*.{cmd,[cC][mM][dD]} text eol=crlf
+*.{bat,[bB][aA][tT]} text eol=crlf
+*.{css,scss,js,jsx,ts,tsx,json,md,html} text eol=lf
