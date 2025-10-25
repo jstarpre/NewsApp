@@ -211,7 +211,7 @@ function App() {
           </div>
         )}
       </div>
-<footer className="text-center py-6 text-white/60 text-sm mt-12">
+<footer className={`text-center py-6 text-sm mt-12 ${darkMode ? 'text-white/80' : 'text-gray-700'}`}>
   <p>Created with ❤️ by Javeriya Sikandar</p>
 </footer>
     </div>
