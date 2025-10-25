@@ -56,7 +56,7 @@ function NewsCard({ article }) {
 
         {/* Description */}
         {description && (
-          <p className="text-gray-300 mb-5 line-clamp-3 text-sm leading-relaxed">
+          <p className="text-gray-500 dark:text-gray-250 mb-5 line-clamp-3 text-sm leading-relaxed">
             {description}
           </p>
         )}
