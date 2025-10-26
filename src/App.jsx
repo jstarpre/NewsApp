@@ -50,29 +50,46 @@ function App() {
   const API_KEY = '2becb17373ed0b0feb31c026c1ab9f81';
   const API_URL = `https://gnews.io/api/v4/top-headlines?category=${category}&lang=en&country=us&max=10&apikey=${API_KEY}`;
 
-  const fetchNews = async () => {
+  const fetchNews = async (currentCategory = 'general') => {
     setLoading(true);
     setError(null);
-    
     try {
-      const response = await fetch(API_URL);
+      const isLocalDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      let response;
+      const timestamp = new Date().getTime();
       
-      if (!response.ok) {
-        throw new Error('Failed to fetch news. Please check your API key.');
+      if (isLocalDevelopment) {
+        const API_KEY = '2becb17373ed0b0feb31c026c1ab9f81';
+        response = await fetch(
+          `https://gnews.io/api/v4/top-headlines?category=${currentCategory}&lang=en&country=us&max=10&apikey=${API_KEY}&t=${timestamp}`
+        );
+      } else {
+        response = await fetch(`/.netlify/functions/fetchNews?category=${currentCategory}&t=${timestamp}`, {
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+          }
+        });
       }
       
       const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to fetch news');
+      }
+      
       setArticles(data.articles || []);
     } catch (err) {
-      setError(err.message);
-      console.error('Error fetching news:', err);
+      console.error('Error details:', err);
+      setError(err.message || 'Failed to load news. Please try again later.');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchNews();
+    fetchNews(category);
   }, [category]);
 
   const filteredArticles = articles.filter(article => {
